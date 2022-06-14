@@ -68,9 +68,9 @@ export default function App() {
   }
 
   return (
-    <main className='container text-center'>
+    <main className='main text-left'>
       {!questions[currentIndex] && (
-        <div>
+        <div className='quiz flex column center'>
           <h1>Setup Quiz</h1>
           <form onSubmit={handleSubmit}>
             <label htmlFor='number'>Number of Questions</label>
@@ -109,16 +109,19 @@ export default function App() {
               <option value='hard'>Hard</option>
             </select>
             <br />
-            <button type='submit'>Start</button>
+            <button type='submit' className='btn btn-tertiary'>
+              Start
+            </button>
           </form>
         </div>
       )}
-      <div>
+      <div className='question-box'>
         {questions[currentIndex] && (
           <SingleQuestion
             questions={questions}
             setCurrentIndex={setCurrentIndex}
             currentIndex={currentIndex}
+            userInput={userInput}
           />
         )}
       </div>
