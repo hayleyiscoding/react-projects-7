@@ -74,7 +74,7 @@ export default function SingleQuestion({
         <div className='text-right'>
           {" "}
           <button type='button' onClick={skipQuestion} className='btn'>
-            Next Question -->
+            Next Question
           </button>
         </div>
       </section>

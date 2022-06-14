@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import SingleQuestion from "./components/SingleQuestion";
 
 export default function App() {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [questions, setQuestions] = useState([]);
   const [userInput, setUserInput] = useState({
     numberOfQuestions: 10,
@@ -36,9 +36,9 @@ export default function App() {
       const response = await fetch(url);
       const data = await response.json();
       setQuestions(data.results);
-      setLoading(false);
     } catch (error) {
       console.log(error);
+    } finally {
       setLoading(false);
     }
   };
@@ -65,6 +65,10 @@ export default function App() {
     setUserInput((prevData) => {
       return { ...prevData, [event.target.name]: event.target.value };
     });
+  }
+
+  if (loading && questions.length < 1) {
+    return <h1>Loading...</h1>;
   }
 
   return (
