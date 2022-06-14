@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
+import SingleQuestion from "./components/SingleQuestion";
 
 export default function App() {
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState(null);
+  const [questions, setQuestions] = useState([]);
   const [userInput, setUserInput] = useState({
     numberOfQuestions: 10,
     difficulty: "easy",
     category: 9,
   });
   const [categories, setCategories] = useState(null);
+  const [currentIndex, setCurrentIndex] = useState(null);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -33,7 +35,7 @@ export default function App() {
       )}&type=multiple`;
       const response = await fetch(url);
       const data = await response.json();
-      setData(data);
+      setQuestions(data.results);
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -56,6 +58,7 @@ export default function App() {
   function handleSubmit(event) {
     event.preventDefault();
     fetchData();
+    setCurrentIndex(0);
   }
 
   function handleChange(event) {
@@ -66,46 +69,59 @@ export default function App() {
 
   return (
     <main className='container text-center'>
-      <h1>Setup Quiz</h1>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor='number'>Number of Questions</label>
-        <input
-          name='numberOfQuestions'
-          type='number'
-          placeholder='10'
-          id='number'
-          value={userInput.numberOfQuestions}
-          onChange={handleChange}
-        ></input>
-        <br />
-        <label htmlFor='category'>Category</label>
-        <select
-          name='category'
-          id='category'
-          value={userInput.category}
-          onChange={handleChange}
-        >
-          {categories?.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
-        </select>
-        <br />
-        <label htmlFor='difficulty'>Select Difficulty:</label>
-        <select
-          name='difficulty'
-          id='difficulty'
-          value={userInput.difficulty}
-          onChange={handleChange}
-        >
-          <option value='easy'>Easy</option>
-          <option value='medium'>Medium</option>
-          <option value='hard'>Hard</option>
-        </select>
-        <br />
-        <button type='submit'>Start</button>
-      </form>
+      {!questions[currentIndex] && (
+        <div>
+          <h1>Setup Quiz</h1>
+          <form onSubmit={handleSubmit}>
+            <label htmlFor='number'>Number of Questions</label>
+            <input
+              name='numberOfQuestions'
+              type='number'
+              placeholder='10'
+              id='number'
+              value={userInput.numberOfQuestions}
+              onChange={handleChange}
+            ></input>
+            <br />
+            <label htmlFor='category'>Category</label>
+            <select
+              name='category'
+              id='category'
+              value={userInput.category}
+              onChange={handleChange}
+            >
+              {categories?.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+            <br />
+            <label htmlFor='difficulty'>Select Difficulty:</label>
+            <select
+              name='difficulty'
+              id='difficulty'
+              value={userInput.difficulty}
+              onChange={handleChange}
+            >
+              <option value='easy'>Easy</option>
+              <option value='medium'>Medium</option>
+              <option value='hard'>Hard</option>
+            </select>
+            <br />
+            <button type='submit'>Start</button>
+          </form>
+        </div>
+      )}
+      <div>
+        {questions[currentIndex] && (
+          <SingleQuestion
+            questions={questions}
+            setCurrentIndex={setCurrentIndex}
+            currentIndex={currentIndex}
+          />
+        )}
+      </div>
     </main>
   );
 }
