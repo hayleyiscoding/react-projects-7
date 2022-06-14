@@ -5,6 +5,7 @@ export default function SingleQuestion({
   questions,
   setCurrentIndex,
   currentIndex,
+  userInput,
 }) {
   const [score, setScore] = useState(0);
   const [totalQuestions, setTotalQuestions] = useState(0);
@@ -35,7 +36,7 @@ export default function SingleQuestion({
   }
 
   function skipQuestion() {
-    if (currentIndex < questions.length - 1) {
+    if (currentIndex < userInput.numberOfQuestions - 1) {
       setCurrentIndex((prevIndex) => prevIndex + 1);
       setTotalQuestions((prevTotal) => prevTotal + 1);
     } else {
@@ -60,7 +61,7 @@ export default function SingleQuestion({
                   className='btn btn-primary'
                   type='button'
                   onClick={
-                    currentIndex < questions.length - 1
+                    currentIndex < userInput.numberOfQuestions - 1
                       ? () => getNextQuestion(item)
                       : () => showAlert(item)
                   }
