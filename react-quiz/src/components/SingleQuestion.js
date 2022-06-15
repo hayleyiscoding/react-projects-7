@@ -18,7 +18,13 @@ export default function SingleQuestion({
     .sort(() => Math.random() - 0.5);
 
   function getNextQuestion(item) {
-    setCurrentIndex((prevIndex) => prevIndex + 1);
+    setCurrentIndex((prevIndex) => {
+      if (prevIndex + 1 <= userInput.numberOfQuestions - 1) {
+        return prevIndex + 1;
+      } else {
+        return prevIndex;
+      }
+    });
     if (question.correct_answer.includes(item)) {
       setScore((prevScore) => prevScore + 1);
       setTotalQuestions((prevTotal) => prevTotal + 1);
@@ -48,7 +54,7 @@ export default function SingleQuestion({
     <div className='flex column'>
       <section className='score text-right'>
         <h6>
-          Correct Answers: {score}/{totalQuestions}
+          Correct Answers: {score}/{currentIndex}
         </h6>
       </section>
       <section className='question text-center'>
@@ -73,9 +79,11 @@ export default function SingleQuestion({
         </ul>
         <div className='text-right'>
           {" "}
-          <button type='button' onClick={skipQuestion} className='btn'>
-            Next Question
-          </button>
+          {currentIndex < userInput.numberOfQuestions - 1 && (
+            <button type='button' onClick={skipQuestion} className='btn'>
+              Next Question
+            </button>
+          )}
         </div>
       </section>
       <section>
